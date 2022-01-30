@@ -1,6 +1,6 @@
 # greetings-test
 
-##Greeting application
+## Greeting application
 
 I recommend you to use a virual environment (```python3 -m venv env```).
 
@@ -19,9 +19,10 @@ In terminal:
 Inside _main directory_:
 
 ```docker-compose build``` -- building docker images
+
 ```docker-compose up``` -- running our images
 
-You can work with application using _127.0.0.1_ url.
+Here it is, now you can work with application, using ```http://127.0.0.1:80``` url.
 
 ### Run without Docker
 
