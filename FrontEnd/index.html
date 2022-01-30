@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Greetings</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .result-wrap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            flex-wrap: wrap;
+            border: 2px solid black;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: fit-content;
+        }
+
+        #resultList {
+            max-width: 600px;
+        }
+
+        #resultList p {
+            width: fit-content;
+            margin: 10px 15px;
+        }
+
+        .active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<form id="add_user">
+    <h1>Greetings</h1>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+    </div>
+
+    <div style="padding-top:15px">
+        <input type="submit" id="add" value="Add">
+        <input type="button" id="show_all" value="Show All">
+    </div>
+    <div id="resultList" class="result-wrap"></div>
+    <div id="resultMessage" class="result-wrap">
+        <p id="resultMessageText"></p>
+    </div>
+</form>
+
+<script type="text/javascript">
+    const form = document.getElementById("add_user");
+    const resultList = document.getElementById("resultList");
+    const resultMessage = document.getElementById("resultMessage");
+    const resultMessageText = document.getElementById("resultMessageText");
+
+    let url = 'http://127.0.0.1:8000/users';
+
+    form.onsubmit = function(e){
+        e.preventDefault();
+        let formData = new FormData(form);
+
+        axios
+        .post(url+'/greeting',{
+            "email": formData.get("email"),
+        })
+        .then(response => {
+            createResultMessage(response.data);
+        })
+        .catch(error => {
+            createResultMessage(error.response.data["detail"][0]["msg"])});
+    }
+
+    const button_show_all = document.getElementById("show_all");
+    button_show_all.onclick = function(){
+        axios
+        .get(url+'/view_all')
+        .then(response => {
+            createResultList(response.data);
+        })
+    }
+
+    function createResultList(data) {
+        resultList.innerHTML = "";
+
+        data.map((item) => {
+            const text = document.createElement("p");
+            text.innerText = item;
+            resultList.classList.add("active");
+            resultMessage.classList.remove("active");
+            resultList.appendChild(text);
+        })
+    }
+
+    function createResultMessage(data) {
+        resultMessageText.innerText = data;
+        resultMessage.classList.add("active");
+        resultList.classList.remove("active");
+    }
+
+</script>
+
+</body>
+</html>
